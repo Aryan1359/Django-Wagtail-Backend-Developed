@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Install Sequence Guide: Django + Wagtail + React + Bootstrap Project</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 0 2rem; background: #f9f9fc; color: #222; }
+    header { background: #374151; color: #fff; padding: 1rem 2rem; border-radius: 0 0 12px 12px; margin-bottom: 2rem;}
+    nav { margin: 2rem 0 2rem 0; }
+    nav a { display: inline-block; margin-right: 1.5rem; color: #2563eb; text-decoration: none; font-weight: bold;}
+    nav a:hover { text-decoration: underline; }
+    section { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid #e5e7eb;}
+    h2 { color: #2563eb; }
+    .step-header { font-size: 1.3em; margin-top: 2rem; }
+    .reason, .usecase { background: #eef6ff; padding: .75rem 1rem; border-radius: 8px; margin: .5rem 0 1rem 0; }
+    .reason { border-left: 4px solid #60a5fa; }
+    .usecase { border-left: 4px solid #34d399; }
+    ul { margin-top: .25rem; }
+    code, pre { background: #e2e8f0; border-radius: 5px; padding: 2px 6px;}
+    .note { background: #fff7ed; color: #7c4700; padding: .75rem 1rem; border-left: 4px solid #f59e42; border-radius: 8px; margin: 1rem 0; }
+    .glossary { background: #f1f5f9; padding: 1rem 1.5rem; border-radius: 10px; margin-top: 2rem; }
+    .glossary h2 { color: #16a34a; }
+    .glossary-term { margin-top: 1.3rem; }
+    .glossary-term h3 { margin-bottom: .2rem; }
+    .back-link { font-size: 0.95em; color: #2563eb; text-decoration: none; margin-left: 0.7em;}
+    .back-link:hover { text-decoration: underline; }
+    /* Added style for glossary links within the text */
+    .glossary-link { color: #007bff; text-decoration: underline; }
+    .glossary-link:hover { text-decoration: none; }
+    @media (max-width:600px) { body { padding: 0 0.3rem; } header, nav { padding: 1rem; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Install & Setup Sequence Guide<br><small style="font-weight:400;">Django + Wagtail + React + Bootstrap Project</small></h1>
+    <p>Step-by-step guide with detailed explanations, reasoning, and use cases for each technology in your stack.<br>
+    <span style="color:#ffd700;">(Tip: See <a href="#glossary" style="color:#ffd700;text-decoration:underline;">Glossary of Key Terms</a> at the bottom if you’re new to any technical terms!)</span></p>
+  </header>
+  
+  <nav>
+    <a href="#env">1. Environment Preparation</a>
+    <a href="#git">2. Initialize Version Control</a>
+    <a href="#backend">3. Django + Wagtail Backend</a>
+    <a href="#frontend">4. React + Bootstrap Frontend</a>
+    <a href="#api">5. API Layer</a>
+    <a href="#wagtail-ext">6. Wagtail CMS Extensions</a>
+    <a href="#auth">7. User Authentication</a>
+    <a href="#celery">8. Celery & Redis (Async Tasks)</a>
+    <a href="#devops">9. Docker & DevOps</a>
+    <a href="#deploy">10. Cloud Hosting & Deployment</a>
+    <a href="#glossary">Glossary</a>
+  </nav>
+  
+  <section id="env">
+    <h2 class="step-header">1. Environment Preparation</h2>
+    <div class="reason"><strong>Reason:</strong> A solid <a href="#python">Python</a> and <a href="#nodejs-lts">Node</a> environment ensures all future dependencies install cleanly and match between your local machine and production.</div>
+    <div class="usecase"><strong>Use Case:</strong> Ensures your <a href="#python">Python</a>, <a href="#nodejs-lts">Node.js</a>, and system libraries are isolated and reproducible (via <a href="#anaconda-conda">Anaconda</a>) for both development and deployment.</div>
+    <ul>
+      <li>Install <b><a href="#anaconda-conda">Anaconda</a></b> (if not already).</li>
+      <li>Create & activate your <a href="#anaconda-conda">Conda</a> environment:
+        <br><code>conda env create -f environment.yml</code>
+      </li>
+      <li>Install <b><a href="#python">Python 3.11+</a></b> and <a href="#nodejs-lts">Node.js (LTS)</a> within this environment.</li>
+      <li>Test with: <code>python --version</code> and <code>node --version</code></li>
+    </ul>
+    <div class="note"><b>Note:</b> <a href="#anaconda-conda">Anaconda</a> helps avoid “works on my machine” problems.</div>
+  </section>
+
+  <section id="git">
+    <h2 class="step-header">2. Initialize Version Control (<a href="#git">Git</a>)</h2>
+    <div class="reason"><strong>Reason:</strong> <a href="#git">Git</a> tracks all changes, lets you roll back mistakes, collaborate safely, and integrate with <a href="#github-gitlab">GitHub</a>, <a href="#github-gitlab">GitLab</a>, etc.</div>
+    <div class="usecase"><strong>Use Case:</strong> Required for safe, modern software development and easy cloud deployment later.</div>
+    <ul>
+      <li>Initialize <a href="#git">git</a>: <code>git init</code></li>
+      <li>Add a <code>.gitignore</code> (<a href="#python">Python</a>, <a href="#nodejs-lts">Node</a>, env files, etc.)</li>
+      <li>First commit: <code>git add . &amp;&amp; git commit -m "Initial commit"</code></li>
+    </ul>
+    <div class="note"><b>Tip:</b> Commit after each major step below!</div>
+  </section>
+
+  <section id="backend">
+    <h2 class="step-header">3. <a href="#django">Django</a> + <a href="#wagtail">Wagtail</a> Backend</h2>
+    <div class="reason"><strong>Reason:</strong> <a href="#django">Django</a> is the main engine; <a href="#wagtail">Wagtail</a> sits on top of it. Get your backend working before adding a frontend.</div>
+    <div class="usecase"><strong>Use Case:</strong> Provides the database, admin panel, and <a href="#api-general">API</a> foundation for your whole project.</div>
+    <ul>
+      <li>Install <a href="#django">Django</a>: <code><a href="#pip">pip</a> install django</code></li>
+      <li>Start your <a href="#django">Django</a> project: <code>django-admin startproject backend</code></li>
+      <li>Install <a href="#wagtail">Wagtail</a>: <code><a href="#pip">pip</a> install wagtail</code></li>
+      <li>Set up <a href="#wagtail">Wagtail</a>: <code>wagtail start mysite</code></li>
+      <li>Install <a href="#postgresql">PostgreSQL</a> client: <code><a href="#pip">pip</a> install <a href="#psycopg2-pg8000">psycopg2-binary</a></code> or <code><a href="#psycopg2-pg8000">pg8000</a></code></li>
+      <li>Edit <code>settings.py</code> to use <a href="#postgresql">PostgreSQL</a> (not SQLite for production!)</li>
+      <li>Migrate: <code>python manage.py migrate</code></li>
+      <li>Create admin user: <code>python manage.py createsuperuser</code></li>
+    </ul>
+    <div class="note"><b>Why now?</b> Setting up models, admin, and <a href="#cms-general">CMS</a> features is easier before wiring in the <a href="#api-general">API</a> or frontend.</div>
+  </section>
+
+  <section id="frontend">
+    <h2 class="step-header">4. <a href="#react">React</a> + <a href="#bootstrap">Bootstrap</a> Frontend</h2>
+    <div class="reason"><strong>Reason:</strong> Keeping the <a href="#react">React</a> app in its own folder separates backend logic from frontend UI, avoids confusion, and allows independent dev/reloads.</div>
+    <div class="usecase"><strong>Use Case:</strong> Enables a modern, dynamic user experience and easier future expansion (mobile, etc).</div>
+    <ul>
+      <li>Create <a href="#react">React</a> app: <code><a href="#npx">npx</a> create-react-app frontend</code> or <code><a href="#npm">npm</a> create <a href="#vite">vite</a>@latest frontend -- --template react</code></li>
+      <li>Install <b><a href="#bootstrap">Bootstrap</a></b>: <code><a href="#npm">npm</a> install bootstrap</code></li>
+      <li>Set up <code>Navbar</code>, <code>Footer</code>, etc., as reusable components.</li>
+      <li>Use <a href="#axios">Axios</a> or <a href="#fetch">Fetch</a> for <a href="#api-general">API</a> calls.</li>
+    </ul>
+    <div class="note"><b>Tip:</b> Develop the UI in parallel with the backend, connecting via <a href="#api-general">APIs</a> as soon as available.</div>
+  </section>
+
+  <section id="api">
+    <h2 class="step-header">5. <a href="#api-general">API</a> Layer (<a href="#drf">DRF</a> & <a href="#cors">CORS</a>)</h2>
+    <div class="reason"><strong>Reason:</strong> The <a href="#api-general">API</a> bridges your <a href="#django">Django</a> backend (data, auth, <a href="#cms-general">CMS</a>) with your <a href="#react">React</a> frontend. <a href="#cors">CORS</a> enables secure cross-origin requests.</div>
+    <div class="usecase"><strong>Use Case:</strong> Needed for <a href="#react">React</a> to fetch content, post forms, or do authentication with <a href="#django">Django</a>.</div>
+    <ul>
+      <li>Install <a href="#drf">Django REST Framework</a>: <code><a href="#pip">pip</a> install djangorestframework</code></li>
+      <li>Add <code>'rest_framework'</code> to <code>INSTALLED_APPS</code></li>
+      <li>Install and set up <a href="#cors">CORS headers</a>: <code><a href="#pip">pip</a> install django-cors-headers</code></li>
+      <li>Add <a href="#cors">CORS</a> settings to allow <a href="#react">React</a> frontend requests.</li>
+      <li>Build your first <a href="#api-general">API</a> endpoints (e.g., <code>/api/pages/</code>).</li>
+    </ul>
+    <div class="note"><b>Why here?</b> Once backend & frontend skeletons are up, <a href="#api-general">APIs</a> let you join them.</div>
+  </section>
+
+  <section id="wagtail-ext">
+    <h2 class="step-header">6. <a href="#wagtail">Wagtail</a> <a href="#cms-general">CMS</a> Extensions</h2>
+    <div class="reason"><strong>Reason:</strong> Extensions like <a href="#streamfield">StreamField</a>, <a href="#imagechooserblock">Image Gallery</a>, <a href="#wagtail-contrib-forms">Forms</a>, and custom page types turn basic <a href="#wagtail">Wagtail</a> into a powerful <a href="#cms-general">CMS</a>.</div>
+    <div class="usecase"><strong>Use Case:</strong> Lets editors manage pages, images, galleries, and forms without coding; essential for any real site.</div>
+    <ul>
+      <li>Add <a href="#streamfield">StreamField</a> to page models for rich, flexible content.</li>
+      <li>Add <code><a href="#wagtail-contrib-forms">wagtail.contrib.forms</a></code> for contact forms.</li>
+      <li>Use <code><a href="#wagtail-contrib-modeladmin">wagtail.contrib.modeladmin</a></code> for admin UI extensions.</li>
+      <li>Add <code><a href="#wagtail-contrib-settings">wagtail.contrib.settings</a></code> for site-wide settings.</li>
+      <li>Build custom Home, Blog, About page types, etc.</li>
+      <li>Set up the image gallery using <a href="#wagtail">Wagtail’s</a> <a href="#imagechooserblock">image chooser blocks</a>.</li>
+    </ul>
+    <div class="note"><b>Why now?</b> Your <a href="#cms-general">CMS</a> is ready for content, media, and custom structure before you fine-tune the user experience or deploy.</div>
+  </section>
+
+  <section id="auth">
+    <h2 class="step-header">7. User Authentication</h2>
+    <div class="reason"><strong>Reason:</strong> Secure login for staff, editors, or site users, plus optional support for <a href="#react">React</a>-based authentication (<a href="#jwt">token/JWT</a>).</div>
+    <div class="usecase"><strong>Use Case:</strong> Lets you restrict pages, manage accounts, or offer protected <a href="#api-general">APIs</a> for users and admins.</div>
+    <ul>
+      <li>Use <a href="#django">Django’s</a> built-in auth for admin and staff logins.</li>
+      <li>If <a href="#react">React</a> frontend needs user auth: Add <a href="#jwt">JWT</a>/<a href="#session-auth">Session</a> support (<code>django-rest-framework-simplejwt</code> or similar).</li>
+      <li>Wire up login/logout/register <a href="#api-general">APIs</a> for frontend if required.</li>
+    </ul>
+    <div class="note"><b>Tip:</b> Don’t add <a href="#jwt">JWT</a> unless you really need true headless user login via <a href="#react">React</a>.</div>
+  </section>
+
+  <section id="celery">
+    <h2 class="step-header">8. <a href="#celery-glossary">Celery</a> &amp; <a href="#redis">Redis</a> (<a href="#async-tasks">Async Tasks</a>)</h2>
+    <div class="reason"><strong>Reason:</strong> Needed if your project sends emails, processes images, or runs other background tasks that shouldn’t slow down page loads.</div>
+    <div class="usecase"><strong>Use Case:</strong> Handle heavy/slow work in the background—e.g., contact form emails, video processing, notifications, etc. (See <a href="#celery-glossary">Celery</a> and <a href="#redis">Redis</a> in glossary).</div>
+    <ul>
+      <li>Install <a href="#celery-glossary">Celery</a>: <code><a href="#pip">pip</a> install celery</code></li>
+      <li>Install <a href="#redis">Redis</a> server (local or cloud), plus <code><a href="#pip">pip</a> install redis</code></li>
+      <li>Configure <a href="#celery-glossary">Celery</a> in <a href="#django">Django</a> (<code>celery.py</code>)</li>
+      <li>Test with a sample <a href="#async-tasks">async task</a>.</li>
+    </ul>
+    <div class="note"><b>Optional:</b> Only set this up if you know you’ll need background processing. Not required for static or simple sites.</div>
+  </section>
+
+  <section id="devops">
+    <h2 class="step-header">9. <a href="#docker">Docker</a> & <a href="#devops-general">DevOps</a></h2>
+    <div class="reason"><strong>Reason:</strong> <a href="#docker">Containerization</a> means your app runs the same everywhere—dev, staging, or prod. Also enables easy <a href="#scalability">scaling</a> and cloud deployment.</div>
+    <div class="usecase"><strong>Use Case:</strong> <a href="#portability">Portable</a> local dev, easy onboarding for team, seamless deploy to <a href="#cloud-hosting">AWS</a>, <a href="#cloud-hosting">Heroku</a>, etc.</div>
+    <ul>
+      <li>Write <code><a href="#docker">Dockerfile</a></code> for <a href="#django">Django</a> backend.</li>
+      <li>Write <code><a href="#docker">Dockerfile</a></code> for <a href="#react">React</a> frontend (optional, if deploying separately).</li>
+      <li>Create <code><a href="#docker-compose">docker-compose.yml</a></code> to orchestrate backend, frontend, db, <a href="#redis">redis</a>, etc. locally.</li>
+      <li>Add <code>.env.example</code> for <a href="#env-vars">environment variables</a>.</li>
+      <li>Test local <a href="#docker">Docker</a> build and up: <code>docker-compose up --build</code></li>
+    </ul>
+    <div class="note"><b>Why now?</b> Prepares you for cloud deploy and keeps your environments consistent from local dev through to production.</div>
+  </section>
+
+  <section id="deploy">
+    <h2 class="step-header">10. <a href="#cloud-hosting">Cloud Hosting</a> & Deployment</h2>
+    <div class="reason"><strong>Reason:</strong> <a href="#cloud-hosting">Cloud hosting</a> gets your app live, lets you collaborate, and test the full workflow.</div>
+    <div class="usecase"><strong>Use Case:</strong> Run your site on <a href="#cloud-hosting">AWS</a>, <a href="#cloud-hosting">Heroku</a>, <a href="#cloud-hosting">Render</a>, <a href="#cloud-hosting">DigitalOcean</a>, or another cloud—serving real users or clients.</div>
+    <ul>
+      <li>Prepare deploy scripts (for <a href="#cloud-hosting">AWS ECS</a>, <a href="#cloud-hosting">Heroku</a>, <a href="#cloud-hosting">Render</a>, etc.)</li>
+      <li>Set up production settings (static/media handling, allowed hosts, secure <a href="#env-vars">env vars</a>, etc.)</li>
+      <li>Deploy with <a href="#docker">Docker</a> or platform-native methods.</li>
+      <li>Test and monitor!</li>
+    </ul>
+    <div class="note"><b>Tip:</b> Deploy and test in the cloud before you “finish” the project—never wait until the end.</div>
+  </section>
+
+  <section class="glossary" id="glossary">
+    <h2>Glossary of Key Terms</h2>
+    <div class="glossary-term" id="npm">
+      <h3>npm (Node Package Manager)</h3>
+      <p><b>What is it?</b> A tool for installing and managing JavaScript packages (libraries and tools) needed for your frontend projects. Comes automatically with Node.js.</p>
+      <p><b>Use Case:</b> Lets you add things like <a href="#react">React</a>, <a href="#bootstrap">Bootstrap</a>, and other libraries with one command. Example: <code>npm install bootstrap</code> installs <a href="#bootstrap">Bootstrap</a> styling for your <a href="#react">React</a> app.</p>
+      <a class="back-link" href="#env">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="axios">
+      <h3>Axios</h3>
+      <p><b>What is it?</b> A popular JavaScript library used in <a href="#react">React</a> to make HTTP requests (like GET, POST) to your backend <a href="#api-general">API</a>. Think of it as a helper for connecting your <a href="#react">React</a> frontend to your <a href="#django">Django</a> backend.</p>
+      <p><b>Use Case:</b> You might use <a href="#axios">Axios</a> to fetch a list of blog posts from your <a href="#django">Django</a> <a href="#api-general">API</a> or submit a contact form from <a href="#react">React</a>.</p>
+      <a class="back-link" href="#frontend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="fetch">
+      <h3>Fetch API</h3>
+      <p><b>What is it?</b> The built-in browser method for making HTTP requests from <a href="#javascript">JavaScript</a>. Similar to <a href="#axios">Axios</a>, but with less built-in error handling.</p>
+      <p><b>Use Case:</b> Use <a href="#fetch">fetch</a> to get data from your backend or send data from your <a href="#react">React</a> app. Example: <code>fetch('/api/posts/')</code>.</p>
+      <a class="back-link" href="#frontend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="cors">
+      <h3>CORS (Cross-Origin Resource Sharing)</h3>
+      <p><b>What is it?</b> A browser security feature that restricts how web pages can request resources (like data) from a different server (domain) than the one the page came from.</p>
+      <p><b>Use Case:</b> If your <a href="#react">React</a> app runs at <code>localhost:3000</code> and <a href="#django">Django</a> <a href="#api-general">API</a> at <code>localhost:8000</code>, you need <a href="#cors">CORS</a> headers set up to allow the <a href="#react">React</a> app to talk to the <a href="#django">Django</a> <a href="#api-general">API</a>. Otherwise, the browser blocks the requests.</p>
+      <a class="back-link" href="#api">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="celery-glossary">
+      <h3>Celery</h3>
+      <p><b>What is it?</b> An open-source <a href="#python">Python</a> library for running background tasks and scheduling periodic jobs. Commonly used in <a href="#django">Django</a> apps for sending emails, processing images, or anything that might take too long for a normal web request.</p>
+      <p><b>Use Case:</b> If a user fills a contact form and you want to send a confirmation email without slowing down the site, <a href="#celery-glossary">Celery</a> handles the email in the background.</p>
+      <a class="back-link" href="#celery">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="redis">
+      <h3>Redis</h3>
+      <p><b>What is it?</b> A fast, open-source, in-memory database. In this project, it's usually used as a "message broker" for <a href="#celery-glossary">Celery</a>—helping manage task queues and pass messages between different parts of your app.</p>
+      <p><b>Use Case:</b> Required if you use <a href="#celery-glossary">Celery</a> to handle background jobs; <a href="#redis">Redis</a> temporarily stores messages/tasks until they're processed.</p>
+      <a class="back-link" href="#celery">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="python">
+      <h3>Python</h3>
+      <p><b>What is it?</b> A high-level, general-purpose programming language known for its readability and versatility. It's widely used for web development (especially backend), data analysis, artificial intelligence, and automation.</p>
+      <p><b>Use Case:</b> In this project, <a href="#python">Python</a> is the primary language for your <a href="#django">Django</a> and <a href="#wagtail">Wagtail</a> backend, handling server logic, database interactions, and content management.</p>
+      <a class="back-link" href="#backend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="javascript">
+      <h3>JavaScript</h3>
+      <p><b>What is it?</b> A high-level, interpreted programming language primarily used for creating interactive and dynamic content on web pages (frontend). With <a href="#nodejs-lts">Node.js</a>, it can also be used for server-side (backend) development.</p>
+      <p><b>Use Case:</b> In this project, <a href="#javascript">JavaScript</a> is the core language for your <a href="#react">React</a> frontend, making your website interactive. It's also used on the backend via <a href="#nodejs-lts">Node.js</a> for development tools and potentially server-side rendering.</p>
+      <a class="back-link" href="#frontend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="html">
+      <h3>HTML (HyperText Markup Language)</h3>
+      <p><b>What is it?</b> The standard markup language for creating web pages and web applications. It provides the structure and content of a web page using elements like headings, paragraphs, images, and links.</p>
+      <p><b>Use Case:</b> <a href="#html">HTML</a> forms the basic structure of all your web pages, both in the <a href="#django">Django</a> templates (if used) and especially in your <a href="#react">React</a> components, which ultimately render into <a href="#html">HTML</a> in the browser.</p>
+      <a class="back-link" href="#frontend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="css">
+      <h3>CSS (Cascading Style Sheets)</h3>
+      <p><b>What is it?</b> A stylesheet language used for describing the presentation of a document written in <a href="#html">HTML</a>. It controls the visual appearance of web pages, including colors, fonts, layout, and responsiveness.</p>
+      <p><b>Use Case:</b> <a href="#css">CSS</a>, particularly through the <a href="#bootstrap">Bootstrap</a> framework, is used to style your <a href="#react">React</a> frontend, making it visually appealing and responsive across different devices.</p>
+      <a class="back-link" href="#frontend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="django">
+      <h3>Django</h3>
+      <p><b>What is it?</b> A high-level <a href="#python">Python</a> web framework that encourages rapid development and clean, pragmatic design. It follows the "Don't Repeat Yourself" (DRY) principle and provides many built-in features for web development.</p>
+      <p><b>Use Case:</b> <a href="#django">Django</a> serves as the robust backend for your project, handling database models, URL routing, user authentication, and serving as the foundation for <a href="#wagtail">Wagtail</a> and your <a href="#api-general">APIs</a>.</p>
+      <a class="back-link" href="#backend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="wagtail">
+      <h3>Wagtail</h3>
+      <p><b>What is it?</b> A powerful, open-source <a href="#cms-general">Content Management System (CMS)</a> built on top of <a href="#django">Django</a>. It provides an intuitive editor interface for non-technical users to manage website content, images, and forms.</p>
+      <p><b>Use Case:</b> <a href="#wagtail">Wagtail</a> allows content editors to easily create, update, and organize pages, blog posts, <a href="#imagechooserblock">image galleries</a>, and <a href="#wagtail-contrib-forms">forms</a> without needing to write code, making your site's content dynamic and manageable.</p>
+      <a class="back-link" href="#wagtail-ext">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="react">
+      <h3>React</h3>
+      <p><b>What is it?</b> A <a href="#javascript">JavaScript</a> library for building user interfaces (UIs), particularly single-page applications. It allows developers to create reusable UI components and efficiently update the UI when data changes.</p>
+      <p><b>Use Case:</b> <a href="#react">React</a> powers the dynamic and interactive frontend of your website, providing a modern user experience and allowing for faster page loads and smoother transitions compared to traditional multi-page applications.</p>
+      <a class="back-link" href="#frontend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="bootstrap">
+      <h3>Bootstrap</h3>
+      <p><b>What is it?</b> A free and open-source <a href="#css">CSS</a> framework directed at responsive, mobile-first front-end web development. It contains <a href="#html">HTML</a>- and <a href="#css">CSS</a>-based design templates for typography, forms, buttons, navigation, and other interface components.</p>
+      <p><b>Use Case:</b> <a href="#bootstrap">Bootstrap</a> helps you quickly style your <a href="#react">React</a> frontend with pre-built components and a responsive grid system, ensuring your website looks good and functions well on all screen sizes (desktops, tablets, and mobile phones).</p>
+      <a class="back-link" href="#frontend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="nodejs-lts">
+      <h3>Node.js (LTS)</h3>
+      <p><b>What is it?</b> An open-source, cross-platform <a href="#javascript">JavaScript</a> runtime environment that allows you to execute <a href="#javascript">JavaScript</a> code outside a web browser. LTS stands for "Long Term Support," meaning these versions are maintained for extended periods with critical bug fixes and security updates, making them ideal for production environments.</p>
+      <p><b>Use Case:</b> <a href="#nodejs-lts">Node.js</a> is essential for running <a href="#javascript">JavaScript</a> development tools (like <a href="#npm">npm</a>, <a href="#npx">npx</a>, and <a href="#vite">Vite</a>) for your <a href="#react">React</a> frontend. Using an LTS version ensures stability and reliability for your development workflow and future deployments.</p>
+      <a class="back-link" href="#env">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="anaconda-conda">
+      <h3>Anaconda / Conda</h3>
+      <p><b>What is it?</b> <a href="#anaconda-conda">Anaconda</a> is a distribution of <a href="#python">Python</a> and R for scientific computing, which includes <a href="#anaconda-conda">Conda</a>. <a href="#anaconda-conda">Conda</a> is an open-source package and environment management system that helps you create isolated environments for different projects, preventing conflicts between package versions.</p>
+      <p><b>Use Case:</b> <a href="#anaconda-conda">Conda</a> ensures that the specific versions of <a href="#python">Python</a>, <a href="#nodejs-lts">Node.js</a>, and other libraries your project needs are isolated from your system's global installations, making your development environment consistent and reproducible (avoiding "it works on my machine" issues).</p>
+      <a class="back-link" href="#env">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="git">
+      <h3>Git</h3>
+      <p><b>What is it?</b> A free and open-source distributed version control system. It tracks changes in source code during software development, allowing multiple developers to work on the same project simultaneously without overwriting each other's work.</p>
+      <p><b>Use Case:</b> <a href="#git">Git</a> is crucial for managing your project's code, allowing you to save different versions, revert to previous states, and collaborate effectively with other developers.</p>
+      <a class="back-link" href="#git">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="github-gitlab">
+      <h3>GitHub / GitLab</h3>
+      <p><b>What is it?</b> Web-based platforms that provide hosting for <a href="#git">Git</a> repositories. They offer features like issue tracking, code review, and <a href="#ci-cd">continuous integration/continuous deployment (CI/CD)</a> pipelines, facilitating team collaboration and project management.</p>
+      <p><b>Use Case:</b> While <a href="#git">Git</a> manages your code locally, platforms like <a href="#github-gitlab">GitHub</a> or <a href="#github-gitlab">GitLab</a> allow you to store your project's code remotely, share it with others, and manage your development workflow in a collaborative environment.</p>
+      <a class="back-link" href="#git">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="postgresql">
+      <h3>PostgreSQL</h3>
+      <p><b>What is it?</b> A powerful, open-source relational database management system (RDBMS) known for its strong reliability, feature robustness, and performance. It's often referred to as "the world's most advanced open-source relational database."</p>
+      <p><b>Use Case:</b> <a href="#postgresql">PostgreSQL</a> is used as the primary database for your <a href="#django">Django</a> backend, storing all your application data, including <a href="#wagtail">Wagtail</a> content, user information, and any other data models you define.</p>
+      <a class="back-link" href="#backend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="docker">
+      <h3>Docker</h3>
+      <p><b>What is it?</b> A platform that uses OS-level virtualization to deliver software in packages called containers. Containers are isolated, lightweight, and portable units that bundle an application and all its dependencies, ensuring it runs consistently across different environments.</p>
+      <p><b>Use Case:</b> <a href="#docker">Docker</a> allows you to package your <a href="#django">Django</a> backend, <a href="#react">React</a> frontend, and other services into consistent units, making it easy to run your entire application locally, on staging, or in production without compatibility issues.</p>
+      <a class="back-link" href="#devops">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="docker-compose">
+      <h3>Docker Compose</h3>
+      <p><b>What is it?</b> A tool for defining and running multi-container <a href="#docker">Docker</a> applications. With <a href="#docker-compose">Compose</a>, you use a YAML file to configure your application's services (e.g., backend, frontend, database, <a href="#redis">Redis</a>), and then a single command starts them all up.</p>
+      <p><b>Use Case:</b> <a href="#docker-compose">Docker Compose</a> simplifies your local development setup by allowing you to launch your entire application stack (<a href="#django">Django</a>, <a href="#react">React</a>, <a href="#postgresql">PostgreSQL</a>, <a href="#redis">Redis</a>) with a single command, ensuring all services are correctly linked and configured.</p>
+      <a class="back-link" href="#devops">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="cloud-hosting">
+      <h3>Cloud Hosting Platforms (AWS, Heroku, Render, DigitalOcean)</h3>
+      <p><b>What is it?</b> Services that provide computing resources (servers, databases, storage) over the internet, allowing you to deploy and run your web applications without owning physical hardware. Examples include Amazon Web Services (<a href="#cloud-hosting">AWS</a>), <a href="#cloud-hosting">Heroku</a>, <a href="#cloud-hosting">Render</a>, and <a href="#cloud-hosting">DigitalOcean</a>.</p>
+      <p><b>Use Case:</b> These platforms are where you will deploy your completed web application so that it can be accessed by users worldwide. They handle the infrastructure, <a href="#scalability">scaling</a>, and often provide tools for monitoring and management.</p>
+      <a class="back-link" href="#deploy">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="https">
+      <h3>HTTPS (Hypertext Transfer Protocol Secure)</h3>
+      <p><b>What is it?</b> An extension of the Hypertext Transfer Protocol (HTTP) for secure communication over a computer network. <a href="#https">HTTPS</a> encrypts the communication between a web browser and a website, protecting sensitive data from eavesdropping and tampering.</p>
+      <p><b>Use Case:</b> Essential for securing your web application, especially when handling user logins, sensitive data, or payments. All <a href="#api-general">APIs</a> and public-facing web access for your project should use <a href="#https">HTTPS</a> to ensure data privacy and integrity.</p>
+      <a class="back-link" href="#deploy">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="csrf">
+      <h3>CSRF (Cross-Site Request Forgery)</h3>
+      <p><b>What is it?</b> A type of malicious exploit where a trusted user is tricked into performing an unwanted action on a web application in which they are currently authenticated. Attackers can craft malicious requests that the user's browser automatically sends.</p>
+      <p><b>Use Case:</b> <a href="#django">Django</a> has built-in <a href="#csrf">CSRF</a> protection to prevent these attacks. When your <a href="#react">React</a> frontend sends POST requests to your <a href="#django">Django</a> <a href="#api-general">API</a>, you'll need to ensure proper <a href="#csrf">CSRF</a> tokens are included to validate the requests and prevent unauthorized actions.</p>
+      <a class="back-link" href="#auth">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="env-vars">
+      <h3>Environment Variables</h3>
+      <p><b>What is it?</b> Dynamic named values that can affect the way running processes behave on a computer. In software development, they are commonly used to store sensitive information (like database passwords, <a href="#api-general">API</a> keys) or configuration settings that vary between environments (e.g., development vs. production).</p>
+      <p><b>Use Case:</b> Instead of hardcoding sensitive data directly into your code, you store it in <a href="#env-vars">environment variables</a>. This keeps your secrets secure and allows you to easily change configurations without modifying the codebase, especially important for <a href="#docker">Docker</a> deployments.</p>
+      <a class="back-link" href="#devops">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="drf">
+      <h3>Django REST Framework (DRF)</h3>
+      <p><b>What is it?</b> A powerful and flexible toolkit for building Web <a href="#api-general">APIs</a> in <a href="#django">Django</a>. It provides a set of tools and conventions that make it easy to create robust and efficient RESTful <a href="#api-general">APIs</a> quickly.</p>
+      <p><b>Use Case:</b> <a href="#drf">DRF</a> is used to expose your <a href="#django">Django</a> backend data and functionality (like blog posts, user data, etc.) as <a href="#api-general">API</a> endpoints that your <a href="#react">React</a> frontend can consume. It handles serialization, authentication, and permissions for your <a href="#api-general">API</a>.</p>
+      <a class="back-link" href="#api">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="vite">
+      <h3>Vite</h3>
+      <p><b>What is it?</b> A next-generation frontend tooling that provides an extremely fast development experience. It's an alternative to `create-react-app` for setting up new <a href="#react">React</a> projects, focusing on speed and modern web standards.</p>
+      <p><b>Use Case:</b> You can use <a href="#vite">Vite</a> instead of `create-react-app` to set up your <a href="#react">React</a> frontend, potentially leading to faster build times and a quicker development server startup.</p>
+      <a class="back-link" href="#frontend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="psycopg2-pg8000">
+      <h3>psycopg2-binary / pg8000</h3>
+      <p><b>What is it?</b> These are <a href="#python">Python</a> libraries (database adapters) that allow your <a href="#django">Django</a> application to connect and interact with a <a href="#postgresql">PostgreSQL</a> database. They translate <a href="#python">Python</a> commands into SQL queries that <a href="#postgresql">PostgreSQL</a> understands.</p>
+      <p><b>Use Case:</b> You need one of these packages installed in your <a href="#python">Python</a> environment for <a href="#django">Django</a> to be able to communicate with your <a href="#postgresql">PostgreSQL</a> database, whether it's running locally or in the cloud.</p>
+      <a class="back-link" href="#backend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="streamfield">
+      <h3>StreamField (<a href="#wagtail">Wagtail</a>)</h3>
+      <p><b>What is it?</b> A powerful feature in <a href="#wagtail">Wagtail</a> that allows content editors to build flexible page layouts by combining various content blocks (e.g., text, images, videos, quotes) in any order. It provides a highly customizable content authoring experience.</p>
+      <p><b>Use Case:</b> <a href="#streamfield">StreamField</a> enables editors to create rich and dynamic page content without developers needing to hardcode every possible layout. For example, a blog post could have a heading, then an image, then a paragraph, then a quote, all arranged by the editor.</p>
+      <a class="back-link" href="#wagtail-ext">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="imagechooserblock">
+      <h3>ImageChooserBlock (<a href="#wagtail">Wagtail</a>)</h3>
+      <p><b>What is it?</b> A specific type of block within <a href="#wagtail">Wagtail's</a> <a href="#streamfield">StreamField</a> (or other content areas) that allows editors to easily select and insert images from <a href="#wagtail">Wagtail's</a> built-in image library into their content.</p>
+      <p><b>Use Case:</b> This block simplifies image management for content editors, letting them upload, organize, and embed images directly within their pages without needing developer intervention.</p>
+      <a class="back-link" href="#wagtail-ext">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="wagtail-contrib-forms">
+      <h3>wagtail.contrib.forms</h3>
+      <p><b>What is it?</b> A built-in <a href="#wagtail">Wagtail</a> module that provides functionality for creating and managing web forms (like contact forms, surveys, etc.) directly within the <a href="#wagtail">Wagtail</a> admin interface.</p>
+      <p><b>Use Case:</b> This module allows non-technical users to build and publish forms on the website, collect submissions, and even receive email notifications, all without writing any code.</p>
+      <a class="back-link" href="#wagtail-ext">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="wagtail-contrib-modeladmin">
+      <h3>wagtail.contrib.modeladmin</h3>
+      <p><b>What is it?</b> A <a href="#wagtail">Wagtail</a> module that allows developers to easily register <a href="#django">Django</a> models (which are not <a href="#wagtail">Wagtail</a> pages) into the <a href="#wagtail">Wagtail</a> admin interface, providing a convenient way to manage related data.</p>
+      <p><b>Use Case:</b> If you have <a href="#django">Django</a> models for things like "Authors," "Categories," or "Products" that aren't full <a href="#wagtail">Wagtail</a> pages, `modeladmin` lets you create, edit, and delete them directly from the <a href="#wagtail">Wagtail</a> admin, integrating all your content management in one place.</p>
+      <a class="back-link" href="#wagtail-ext">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="wagtail-contrib-settings">
+      <h3>wagtail.contrib.settings</h3>
+      <p><b>What is it?</b> A <a href="#wagtail">Wagtail</a> module that enables developers to define site-wide settings (e.g., social media links, contact email, copyright year) that can be easily edited by content managers in the <a href="#wagtail">Wagtail</a> admin.</p>
+      <p><b>Use Case:</b> This module is useful for managing global website configurations that don't belong to a specific page, allowing non-developers to update common elements across the site without code changes.</p>
+      <a class="back-link" href="#wagtail-ext">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="jwt">
+      <h3>JWT (JSON Web Token)</h3>
+      <p><b>What is it?</b> A compact, URL-safe means of representing claims to be transferred between two parties. It's often used for authentication, where a server generates a token after a user logs in, and the client sends this token with subsequent requests to prove their identity.</p>
+      <p><b>Use Case:</b> If your <a href="#react">React</a> frontend needs to handle user logins and access protected <a href="#api-general">API</a> endpoints, <a href="#jwt">JWTs</a> provide a stateless way for the frontend to authenticate with the <a href="#django">Django</a> backend without relying on traditional <a href="#session-auth">session cookies</a>.</p>
+      <a class="back-link" href="#auth">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="session-auth">
+      <h3>Session-based Authentication</h3>
+      <p><b>What is it?</b> A traditional authentication method where, after a user logs in, the server creates a "session" (a record of the user's logged-in state) and sends a session ID (usually in a cookie) to the client. The client then sends this cookie with every request to maintain the logged-in state.</p>
+      <p><b>Use Case:</b> <a href="#django">Django's</a> built-in authentication system primarily uses <a href="#session-auth">session-based authentication</a> for its admin panel. While suitable for server-rendered applications, it requires careful handling (like <a href="#csrf">CSRF</a> tokens) when used with a separate <a href="#react">React</a> frontend.</p>
+      <a class="back-link" href="#auth">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="api-general">
+      <h3>API (Application Programming Interface)</h3>
+      <p><b>What is it?</b> A set of definitions and protocols for building and integrating application software. It's essentially a set of rules that dictate how different software components should interact with each other.</p>
+      <p><b>Use Case:</b> In web development, <a href="#api-general">APIs</a> allow your <a href="#react">React</a> frontend to "talk" to your <a href="#django">Django</a> backend, requesting data (e.g., a list of products) or sending data (e.g., a new user registration) without the frontend needing to know the backend's internal logic.</p>
+      <a class="back-link" href="#api">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="cms-general">
+      <h3>CMS (Content Management System)</h3>
+      <p><b>What is it?</b> A software application that allows users to create, manage, and modify content on a website without the need for specialized technical knowledge. It provides a user-friendly interface for content creation and organization.</p>
+      <p><b>Use Case:</b> <a href="#wagtail">Wagtail</a> is your project's <a href="#cms-general">CMS</a>, enabling non-developers (like content editors) to update text, images, and other website content through a web-based admin panel, freeing developers to focus on core features.</p>
+      <a class="back-link" href="#wagtail">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="headless-hybrid">
+      <h3>Headless / Hybrid Architecture</h3>
+      <p><b>What is it?</b>
+        <ul>
+          <li><b>Headless:</b> A <a href="#cms-general">CMS</a> (like <a href="#wagtail">Wagtail</a>) that provides content via an <a href="#api-general">API</a> to any "head" (frontend) without a predefined presentation layer. The frontend is completely separate.</li>
+          <li><b>Hybrid:</b> A combination where the <a href="#cms-general">CMS</a> might serve some traditional web pages directly, but also exposes content via an <a href="#api-general">API</a> for a separate frontend (like <a href="#react">React</a>) to consume.</li>
+        </ul>
+      </p>
+      <p><b>Use Case:</b> Your project uses a <a href="#headless-hybrid">hybrid architecture</a>: <a href="#wagtail">Wagtail</a> manages content on the backend, and your <a href="#react">React</a> frontend consumes this content via <a href="#api-general">APIs</a>. This allows for a flexible, modern UI while still leveraging <a href="#wagtail">Wagtail's</a> powerful content management features.</p>
+      <a class="back-link" href="#api">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="async-tasks">
+      <h3>Asynchronous Task Handling</h3>
+      <p><b>What is it?</b> A programming approach where certain operations (tasks) are executed in the background without blocking the main program flow. This means the application can continue responding to user requests while long-running tasks are being processed.</p>
+      <p><b>Use Case:</b> Used with <a href="#celery-glossary">Celery</a> and <a href="#redis">Redis</a> in your project. For example, when a user submits a contact form, sending the confirmation email is an <a href="#async-tasks">asynchronous task</a>. Your web server immediately responds to the user, and the email is sent in the background, preventing delays.</p>
+      <a class="back-link" href="#celery">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="non-blocking-io">
+      <h3>Non-blocking I/O (Input/Output)</h3>
+      <p><b>What is it?</b> A programming model where an application doesn't wait for I/O operations (like reading from a database, fetching data from a network, or writing to a file) to complete. Instead, it initiates the operation and continues with other tasks, receiving a notification when the I/O is done.</p>
+      <p><b>Use Case:</b> This is a core concept behind <a href="#nodejs-lts">Node.js's</a> efficiency. It allows a single <a href="#nodejs-lts">Node.js</a> server to handle many concurrent connections without creating a new thread for each, making it highly <a href="#scalability">scalable</a> for I/O-bound applications like chat apps or streaming services.</p>
+      <a class="back-link" href="#nodejs-lts">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="v8-engine">
+      <h3>V8 JavaScript engine</h3>
+      <p><b>What is it?</b> An open-source <a href="#javascript">JavaScript</a> engine developed by Google. It's written in C++ and is responsible for compiling and executing <a href="#javascript">JavaScript</a> code. It's used in Google Chrome and, notably, in <a href="#nodejs-lts">Node.js</a>.</p>
+      <p><b>Use Case:</b> <a href="#v8-engine">V8</a> is what makes <a href="#nodejs-lts">Node.js</a> incredibly fast. When you run your <a href="#javascript">JavaScript</a> code with <a href="#nodejs-lts">Node.js</a>, the <a href="#v8-engine">V8 engine</a> quickly compiles that <a href="#javascript">JavaScript</a> into machine code, allowing for high-performance server-side applications.</p>
+      <a class="back-link" href="#nodejs-lts">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="npx">
+      <h3>npx</h3>
+      <p><b>What is it?</b> A command-line tool that comes with <a href="#npm">npm (Node Package Manager)</a> from version 5.2.0 onwards. It allows you to execute <a href="#nodejs-lts">Node.js</a> package executables without explicitly installing them globally or locally.</p>
+      <p><b>Use Case:</b> You used `npx create-react-app` to scaffold your <a href="#react">React</a> project. <a href="#npx">npx</a> temporarily downloads and runs the `create-react-app` package, so you don't have to install it system-wide.</p>
+      <a class="back-link" href="#frontend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="pip">
+      <h3>pip</h3>
+      <p><b>What is it?</b> The standard package-management system used to install and manage software packages written in <a href="#python">Python</a>. It connects to the Python Package Index (PyPI), a large repository of <a href="#python">Python</a> libraries.</p>
+      <p><b>Use Case:</b> You use `pip install` commands (e.g., `pip install django`, `pip install wagtail`) to add all the necessary <a href="#python">Python</a> libraries and frameworks for your <a href="#django">Django</a> backend.</p>
+      <a class="back-link" href="#backend">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="asgi-wsgi">
+      <h3>ASGI / WSGI (<a href="#python">Python</a> Server Interfaces)</h3>
+      <p><b>What is it?</b>
+        <ul>
+          <li><b>WSGI (Web Server Gateway Interface):</b> The older, synchronous standard for <a href="#python">Python</a> web applications and servers to communicate.</li>
+          <li><b>ASGI (Asynchronous Server Gateway Interface):</b> The newer, <a href="#async-tasks">asynchronous</a> standard for <a href="#python">Python</a> web applications, designed to handle modern protocols like WebSockets and HTTP/2 more efficiently.</li>
+        </ul>
+      </p>
+      <p><b>Use Case:</b> <a href="#django">Django</a> traditionally uses <a href="#asgi-wsgi">WSGI</a>, but newer versions and features (like WebSockets) are moving towards <a href="#asgi-wsgi">ASGI</a>. These interfaces ensure that web servers (like Gunicorn or Uvicorn in production) can correctly communicate with and run your <a href="#django">Django</a> application.</p>
+      <a class="back-link" href="#devops">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="ci-cd">
+      <h3>CI/CD (Continuous Integration / Continuous Deployment)</h3>
+      <p><b>What is it?</b> A set of practices in software development that aim to automate and improve the process of building, testing, and deploying software.
+        <ul>
+          <li><b>Continuous Integration (CI):</b> Developers frequently merge their code changes into a central repository, where automated builds and tests are run.</li>
+          <li><b>Continuous Deployment (CD):</b> After successful <a href="#ci-cd">CI</a>, code changes are automatically released to production.</li>
+        </ul>
+      </p>
+      <p><b>Use Case:</b> While not explicitly detailed in your steps, <a href="#docker">Docker</a> and <a href="#cloud-hosting">cloud hosting</a> lay the groundwork for <a href="#ci-cd">CI/CD</a>. Implementing <a href="#ci-cd">CI/CD</a> would mean that every time you push code to <a href="#git">Git</a>, automated tests run, and if they pass, your application is automatically deployed to your <a href="#cloud-hosting">cloud host</a>.</p>
+      <a class="back-link" href="#deploy">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="scalability">
+      <h3>Scalability</h3>
+      <p><b>What is it?</b> The ability of a system to handle a growing amount of work by adding resources. In web applications, this means the ability to handle more users, more data, or more requests without a significant drop in performance.</p>
+      <p><b>Use Case:</b> Your project is designed for <a href="#scalability">scalability</a> using <a href="#docker">Docker</a> containers and <a href="#cloud-hosting">cloud instances</a>. This means if your website becomes very popular, you can easily add more server resources to handle the increased traffic.</p>
+      <a class="back-link" href="#devops">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="maintainability">
+      <h3>Maintainability</h3>
+      <p><b>What is it?</b> The ease with which a software system or component can be modified to correct faults, improve performance or other attributes, or adapt to a changed environment. It relates to how easy it is to fix bugs, add new features, or update the code.</p>
+      <p><b>Use Case:</b> Your project emphasizes modular code layout, comments, and docstrings to ensure good <a href="#maintainability">maintainability</a>. This makes it easier for you and other developers to understand, modify, and extend the codebase in the future.</p>
+      <a class="back-link" href="#devops">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="portability">
+      <h3>Portability</h3>
+      <p><b>What is it?</b> The ability of software to be transferred from one environment (e.g., operating system, hardware platform, cloud provider) to another with minimal or no changes required.</p>
+      <p><b>Use Case:</b> <a href="#docker">Docker</a> greatly enhances your project's <a href="#portability">portability</a>. Because your application is containerized, it can run consistently on Windows, Linux, macOS, or any cloud platform that supports <a href="#docker">Docker</a>, without needing specific configurations for each.</p>
+      <a class="back-link" href="#devops">&#8592; Back to context</a>
+    </div>
+    <div class="glossary-term" id="srs">
+      <h3>SRS (Software Requirements Specification)</h3>
+      <p><b>What is it?</b> A comprehensive document that describes the purpose, scope, features, and non-functional requirements (like performance, security, <a href="#scalability">scalability</a>) of a software system. It serves as a blueprint for the development team.</p>
+      <p><b>Use Case:</b> The <a href="#srs">SRS</a> document you provided outlines exactly what your <a href="#django">Django</a> + <a href="#wagtail">Wagtail</a> + <a href="#react">React</a> + <a href="#bootstrap">Bootstrap</a> project aims to achieve, providing a clear guide for its development and ensuring everyone involved understands the project's goals and constraints.</p>
+      <a class="back-link" href="#glossary">&#8592; Back to context</a>
+    </div>
+  </section>
+
+  <footer style="margin: 2rem 0 2rem 0; color: #888;">
+    <hr>
+    <div>© 2025 | Install Sequence Guide for Django + Wagtail + React + Bootstrap | Made with ChatGPT</div>
+  </footer>
+</body>
+</html>
